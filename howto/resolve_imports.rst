@@ -12,4 +12,4 @@ The process of resolving the imports (telling libCellML where to look for these 
 
 The :code:`Importer` class supports all functionality to do with imports, and contains its own logger which can be used to report anything that might have gone wrong. 
 
-.. include:: ../code_snippets/snippet_resolve_imports.rst
+.. include:: /resources/code_snippets/snippet_resolve_imports.rst

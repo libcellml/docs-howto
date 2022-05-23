@@ -1,4 +1,4 @@
-.. _examples_edit_model:
+.. _edit_model:
 
 =====================
 Edit items in a model
@@ -17,38 +17,32 @@ Within the structure each item has two parts:
 .. contents::
     :local:
 
-About editing
-=============
-
 Editing attributes
-------------------
+==================
 For any item type, each attribute :code:`xyz` may be edited using the general :code:`setXyz` function, whose arguments vary depending on the attribute.
 Note that this is distinct from editing collections of items, which is discussed below.
 
 .. Some example snippets are shown below:
-   include :: ../snippets/snippet_edit_names.rst  **TODO**
-   include :: ../snippets/snippet_edit_mathml.rst
+   include :: /resources/snippets/snippet_edit_names.rst  **TODO**
+   include :: /resources/snippets/snippet_edit_mathml.rst
 
 Editing collections
--------------------
-General families of functions are available for editing collections, but take the form of :code:`addXyz` and :code:`removeXyz`, :code:`takeXyz` and :code:`replaceXyz`, as explained in :ref:`Understanding collections<examples_understand_collections>`.
+===================
+General families of functions are available for editing collections, but take the form of :code:`addXyz` and :code:`removeXyz`, :code:`takeXyz` and :code:`replaceXyz`, as explained in :ref:`Understanding collections<understanding_collections>`.
 
 Some example snippets are shown below:
 
-.. include:: ../snippets/snippet_add_thing.rst
+.. include:: /resources/snippets/snippet_add_thing.rst
 
-.. include:: ../snippets/snippet_remove_thing.rst
+.. include:: /resources/snippets/snippet_remove_thing.rst
 
-.. include:: ../snippets/snippet_take_thing.rst
+.. include:: /resources/snippets/snippet_take_thing.rst
 
-.. include:: ../snippets/snippet_replace_thing.rst
+.. include:: /resources/snippets/snippet_replace_thing.rst
 
-Editing special relationships
------------------------------
-Some parts of the CellML model require different treatment to those listed above; connections between equivalent variables, for example.
 
 Editing variable equivalences
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=============================
 In the situation of equivalent variable collections there is no clear "ownership" of the equivalence as an attribute of any one variable, and neither is there a central parent item with curation ability over the set of variables.
 A different approach is required.
 
@@ -71,7 +65,7 @@ Note that the :code:`removeEquivalence` function will only remove an equivalence
 
 An additional :code:`removeAllEquivalences` function will completely remove the variable from any connected set.
 
-Please see the :api:`API Variable<Variable>` page for details of these functions.
+Please see the :api:`API Variable <Variable>` page for details of these functions.
 
 .. tabs::
 
@@ -105,13 +99,12 @@ Another variable :code:`vegetable` is equivalent to variables :code:`tomato`, :c
 At this time, there are two sets of equivalent variables: all of the fruit are equivalent to one another, and all of the vegetables are equivalent to one another.
 Adding a variable :code:`produce` with an equivalence to :code:`fruit` and to :code:`vegetable` effectively merges the two sets, so that now the variable :code:`peach` is equivalent to :code:`spinach`.
 
-.. **TODO** Need better examples and use cases here once the API issue #619 is clarified.
 
 Editing an encapsulation hierarchy
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==================================
 Components may be added to a model or another component to create an encapsulation hierarchy, but there are a few things to watch out for in this situation.
 Components must belong to only one parent, so when adding a component from one location in the encapsulation to another, it is removed from the original parent.
 
 This is shown in the code snippet below.
 
-.. include:: ../snippets/snippet_edit_encapsulation.rst
+.. include:: /resources/snippets/snippet_edit_encapsulation.rst

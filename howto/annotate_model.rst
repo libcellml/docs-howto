@@ -1,4 +1,4 @@
-.. _examples_annotate_model:
+.. _annotate_model:
 
 ================
 Annotate a model
@@ -7,9 +7,9 @@ Annotate a model
 libCellML does not provide annotation functionality directly, but it can help with some of the things that you might need to know in order to implement your own.
 Each annotation is attached to a unique ID locator which can be retrieved and edited, or created automatically if you haven't already set them yourself.
 Since CellML is a subset of XML, any item may have an ID attribute, including operations within the MathML blocks, CellML entities, and CellML non-entity items (connections, encapsulations etc).
-These ID attributes themselves must follow the specification rules: please see :cellml2:`1.2.5 XML ID attributes<specA2.html?issue=1.2.5>` for details.
+These ID attributes themselves must follow the specification rules: please see :cellml2:`1.2.5 XML ID attributes <specA2.html?issue=XML>` for details.
 
-.. container:: gotcha
+.. container:: nb
 
   At present, items within MathML blocks which have :code:`id` attributes are not retrieved or edited by the annotation class.
   Any editing or manipulation must be done external to libCellML.
@@ -17,11 +17,8 @@ These ID attributes themselves must follow the specification rules: please see :
 .. contents::
     :local:
 
-About the annotation tools
-==========================
-
 Annotation tools for entity items
----------------------------------
+=================================
 
 Entity item types are:
 
@@ -53,7 +50,7 @@ The :code:`id` attribute for each of these entity types can be retrieved using t
     my_model_id_string = model.id()
 
 Annotation tools for other item types
--------------------------------------
+=====================================
 
 Connections and variable equivalence
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -206,7 +203,7 @@ Some items are most readily accessed through their entity-type parents, these be
 - :code:`test_value` and :code:`reset_value` children of :code:`Reset` items.
 
 Unit children of :code:`Units` items can be accessed either through the streamlined ID-only functions :code:`unitId(index)` and :code:`setUnitId(index)`, or through the :code:`unitAttributes` family of functions.
-Note that there are several overloads of the arguments for this function; please see the complete documentation on the :api:`Units functions API page<Units>`.
+Note that there are several overloads of the arguments for this function; please see the complete documentation on the :api:`Units functions API page <Units?fName=addUnit>`.
 
 .. tabs::
 
@@ -258,7 +255,7 @@ Note that there are several overloads of the arguments for this function; please
     mm3PerSecond.unitAttributes(0, unitReference, unitPrefix, unitExponent, unitMultiplier, unitId)
 
 Annotator ``Type`` and returned types
--------------------------------------
+=====================================
 
 +-------------------+-----------------------------------------------------------------------------------------------------+
 | enumeration value | Object type in the "any" container.                                                                 |
@@ -286,7 +283,7 @@ Annotator ``Type`` and returned types
 +-------------------+-----------------------------------------------------------------------------------------------------+
 | TEST_VALUE        | Pointer to the parent :code:`Reset` item containing a test value with the given :code:`id`.         |
 +-------------------+-----------------------------------------------------------------------------------------------------+
-| UNIT              | :code:`Unit` pair, when the first attribute is a :code:`Units` pointer to the parent of         |
+| UNIT              | :code:`Unit` pair, when the first attribute is a :code:`Units` pointer to the parent of             |
 |                   | the unit with the given :code:`id`, and the second attribute is the index within the                |
 |                   | :code:`Units` item at which the unit can be found.                                                  |
 +-------------------+-----------------------------------------------------------------------------------------------------+
@@ -298,14 +295,14 @@ Annotator ``Type`` and returned types
 Useful snippets for annotation
 ==============================
 
-.. include:: ../snippets/snippet_annotator_auto_ids.rst
+.. include:: /resources/snippets/snippet_annotator_auto_ids.rst
 
-.. include:: ../snippets/snippet_annotator_clear_all_ids.rst
+.. include:: /resources/snippets/snippet_annotator_clear_all_ids.rst
 
-.. include:: ../snippets/snippet_annotator_find_item_known_type.rst
+.. include:: /resources/snippets/snippet_annotator_find_item_known_type.rst
 
-.. include:: ../snippets/snippet_annotator_find_item_unknown_type.rst
+.. include:: /resources/snippets/snippet_annotator_find_item_unknown_type.rst
 
-.. include:: ../snippets/snippet_annotator_find_duplicate_ids.rst
+.. include:: /resources/snippets/snippet_annotator_find_duplicate_ids.rst
 
-.. include:: ../snippets/snippet_annotator_retrieve_duplicated_ids.rst
+.. include:: /resources/snippets/snippet_annotator_retrieve_duplicated_ids.rst
