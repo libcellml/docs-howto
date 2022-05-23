@@ -22,9 +22,11 @@ Editing attributes
 For any item type, each attribute :code:`xyz` may be edited using the general :code:`setXyz` function, whose arguments vary depending on the attribute.
 Note that this is distinct from editing collections of items, which is discussed below.
 
-.. Some example snippets are shown below:
-   include :: /resources/snippets/snippet_edit_names.rst  **TODO**
-   include :: /resources/snippets/snippet_edit_mathml.rst
+Some example snippets are shown below:
+
+.. include:: /resources/snippets/snippet_edit_names.rst
+
+.. include:: /resources/snippets/snippet_edit_mathml.rst
 
 Editing collections
 ===================
