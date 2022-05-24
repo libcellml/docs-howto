@@ -158,7 +158,7 @@ Each :code:`Issue` also contains the following attributes:
     std::cout << issue->url() << std::endl;
 
     // Retrieve the item type - a libcellml::CellmlElementType enum - for the issue.
-    auto myType = issue->CellmlElementType();
+    auto myType = issue->item()->type();
 
     // Retrieve the level - a libcellml::Issue::LEVEL enum - for the issue.
     auto myLevel = issue->level();
@@ -175,7 +175,7 @@ Each :code:`Issue` also contains the following attributes:
     print(issue.url())
 
     # Retrieve the cause - a libcellml.CellmlElementType enum - for the issue.
-    my_type = issue.cellmlElementType()
+    my_type = issue.item().type()
 
     # Retrieve the level - a libcellml.Issue.LEVEL enum - for the issue.
     my_level = issue.level()
