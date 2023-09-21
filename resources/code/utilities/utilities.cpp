@@ -1,0 +1,337 @@
+
+/**
+ *  TUTORIAL UTILITIES
+ *  This file contains helper functions for the tutorials.
+ */
+
+#include <algorithm>
+#include <map>
+
+// Includes for creating a new directory
+#include <string> // required for std::string
+#include <sys/types.h> // required for stat.h
+#include <sys/stat.h> // no clue why required -- man pages say so
+
+#include <libcellml>
+
+#include "libcellml/types.h"
+#include "utilities.h"
+
+
+void printModel(libcellml::ModelPtr &model)
+{
+    printModel(model, false);
+}
+
+void printModel(libcellml::ModelPtr &model, bool includeMaths)
+{
+    if(model == nullptr) {
+        std::cout << "No model passed to this function." << std::endl;
+        return;
+    }
+    std::string spacer = "    ";
+
+    std::cout << "MODEL: '" << model->name() << "'";
+    if (model->id() != "") {
+        std::cout << ", id: '" << model->id() << "'";
+    }
+    std::cout << std::endl;
+
+    std::cout << spacer << "UNITS: " << model->unitsCount() << " custom units" << std::endl;
+    for (size_t u = 0; u < model->unitsCount(); ++u) {
+        std::cout << spacer << spacer << "[" << u << "]: " << model->units(u)->name();
+        if(model->units(u)->isImport()) {
+            std::cout << ", imported from: '";
+            std::cout << model->units(u)->importReference();
+            std::cout << "' in '"<<model->units(u)->importSource()->url() << "'";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << spacer << "COMPONENTS: " << model->componentCount() << " components" << std::endl;
+    for (size_t c = 0; c < model->componentCount(); ++c) {
+        auto component = model->component(c);
+        printComponentToTerminal(component, c, spacer + spacer, includeMaths);
+    }
+}
+
+void printComponentToTerminal(const libcellml::ComponentPtr &component, size_t const c, std::string const spacer)
+{
+    printComponentToTerminal(component, c, spacer, true);
+}
+
+void printComponentToTerminal(const libcellml::ComponentPtr &component, size_t const c, std::string const spacer, bool includeMaths)
+{
+    std::string local = "    ";
+
+    std::cout << spacer << "[" << c << "]: '" << component->name() << "'";
+    if (component->id() != "") {
+        std::cout << ", id: '" << component->id() << "'";
+    }
+    if(component->isImport()) {
+            std::cout << " <--- imported from: '";
+            std::cout << component->importReference();
+            std::cout << "' in '" << component->importSource()->url() << "'";
+    }
+    std::cout << std::endl;
+
+    std::cout << spacer << local << "VARIABLES: " << component->variableCount() << " variables" << std::endl;
+
+    // Printing the variables within the component.
+    for (size_t v = 0; v < component->variableCount(); v++) {
+        std::cout << spacer << local << local;
+        std::cout << "[" << v << "]: " << component->variable(v)->name();
+        if (component->variable(v)->units() != nullptr) {
+            std::cout << " [" << component->variable(v)->units()->name() << "]";
+        }
+        if (component->variable(v)->initialValue() != "") {
+            std::cout << ", initial = " << component->variable(v)->initialValue();
+        }
+        std::cout << std::endl;
+        if (component->variable(v)->equivalentVariableCount() > 0) {
+            std::cout << spacer << local << local << local;
+            std::string con = "  └──> ";
+            for (size_t e = 0; e < component->variable(v)->equivalentVariableCount(); ++e) {
+                auto ev = component->variable(v)->equivalentVariable(e);
+                if (ev == nullptr) {
+                    std::cout << "WHOOPS! Null equivalent variable!";
+                    continue;
+                }
+                libcellml::ComponentPtr ev_parent = std::dynamic_pointer_cast<libcellml::Component>(ev->parent());
+                if (ev_parent == nullptr) {
+                    std::cout << "WHOOPS! Null parent component for equivalent variable!";
+                    continue;
+                }
+                std::cout << con << ev_parent->name() << ":" << ev->name();
+                if (ev->units() != nullptr) {
+                    std::cout << " [" << ev->units()->name() << "]";
+                }
+                con = ", ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    // Print the maths within the component.
+    if (includeMaths) {
+        if (component->math() != "") {
+            std::cout << spacer << "  Maths in the component is:" << std::endl;
+            std::cout << component->math() << std::endl;
+        }
+    }
+
+    // Print the encapsulated components
+    if (component->componentCount() > 0) {
+        std::cout << spacer << local << "COMPONENT " << component->name() << " has "
+                  << component->componentCount()
+                  << " child components:" << std::endl;
+
+        for (size_t c2 = 0; c2 < component->componentCount(); c2++) {
+            auto child = component->component(c2);
+            std::string oneMoreSpacer = spacer + local + local;
+            printComponentToTerminal(child, c2, oneMoreSpacer, includeMaths);
+        }
+    }
+}
+
+// START printIssues
+void printIssues(const libcellml::LoggerPtr &item) {
+
+    // Get the number of issues attached to the logger item.  Note that this will 
+    // return issues of all levels.  To retrieve the total number of a specific level
+    // of issues, use the errorCount(), warningCount(), hintCount(), or messageCount() functions. 
+    size_t num = item->issueCount();
+    std::cout << "Recorded " << num << " issues";
+
+    if (num != 0) {
+        std::cout << ":" << std::endl;
+        for (size_t i = 0; i < num; ++i) {
+
+            // Retrieve the issue at index i.  Note that this is agnostic as to the level of issue.
+            // Specific issue levels can be retrieved using the functions item->error(i), item->warning(i) 
+            // etc, where the index must be within appropriate limits.
+            libcellml::IssuePtr issue = item->issue(i);
+
+            // Issues created by the Validator class contain a reference heading number, which indicates
+            // the section reference within the normative specification relevant to the issue.
+            std::string errorReference = issue->referenceHeading();
+
+            // The level of an issue is retrieved using the level() function as an enum value.  
+            std::cout << "Issue " << i << " is " << getIssueLevelFromEnum(issue->level()) << ":" << std::endl;
+
+            // Each issue has a descriptive text field, accessible through the description() function.
+            std::cout << "    Description: " << issue->description() << std::endl;
+            if (errorReference != "") {
+                std::cout << "    See section " << errorReference
+                          << " in the CellML specification." << std::endl;
+            }
+
+            // An optional URL is given for some issues which directs the user to more detailed information.
+            if(!issue->url().empty()){
+                std::cout << "    More information is available at: " <<issue->url() << std::endl;
+            }
+
+            // Each issue is associated with an item.  In order to properly deal with the item stored, its type is 
+            // recorded too in an enumeration.
+            std::cout << "    Stored item type: " << cellmlElementTypeAsString(issue->item()->type()) << std::endl;
+        }
+        std::cout << std::endl;
+    }
+    else {
+        std::cout << "!" << std::endl << std::endl;
+    }
+}
+// END printIssues
+
+std::string fileContents(const std::string &fileName)
+{
+    std::ifstream file(fileName);
+    std::stringstream buffer;
+
+    buffer << file.rdbuf();
+
+    return buffer.str();
+}
+
+// START getIssueLevelFromEnum
+std::string getIssueLevelFromEnum(libcellml::Issue::Level myLevel)
+{
+    std::string myTypeAsString = "dunno";
+
+    switch (myLevel) {
+    case libcellml::Issue::Level::ERROR:
+        myTypeAsString = "an ERROR";
+        break;
+    case libcellml::Issue::Level::WARNING:
+        myTypeAsString = "a WARNING";
+        break;
+    case libcellml::Issue::Level::MESSAGE:
+        myTypeAsString = "a MESSAGE";
+        break;
+    }
+    return myTypeAsString;
+}
+// END getIssueLevelFromEnum
+
+void printComponentOnlyToTerminal(libcellml::ComponentPtr &component, std::string spacer)
+{
+    std::cout << spacer << "Component '" << component->name() << "' has " << component->componentCount() << " child components" << std::endl;
+    for (size_t c = 0; c < component->componentCount(); c++) {
+        std::string anotherSpacer = "    " + spacer;
+        auto child = component->component(c);
+        printComponentOnlyToTerminal(child, anotherSpacer);
+    }
+}
+
+void printEncapsulation(libcellml::ModelPtr &model)
+{
+    // Prints the encapsulation structure of the model to the terminal
+    std::string spacer = "  - ";
+
+    std::cout << "Model '" << model->name() << "' has " << model->componentCount()
+              << " components" << std::endl;
+
+    for (size_t c = 0; c < model->componentCount(); ++c) {
+        auto child = model->component(c);
+        printComponentOnlyToTerminal(child, spacer);
+    }
+}
+
+// START printEquivalentVariableSet
+void listEquivalentVariables(const libcellml::VariablePtr &variable, std::vector<libcellml::VariablePtr> &variableList)
+{
+    if (variable == nullptr) {
+        return;
+    }
+
+    for (size_t i = 0; i < variable->equivalentVariableCount(); ++i) {
+        auto equivalentVariable = variable->equivalentVariable(i);
+        if (std::find(variableList.begin(), variableList.end(), equivalentVariable) == variableList.end()) {
+            variableList.push_back(equivalentVariable);
+            listEquivalentVariables(equivalentVariable, variableList);
+        }
+    }
+}
+
+void printEquivalentVariableSet(const libcellml::VariablePtr &variable)
+{
+    if (variable == nullptr) {
+        std::cout << "NULL variable submitted to printEquivalentVariableSet." << std::endl;
+        return;
+    }
+    std::vector<libcellml::VariablePtr> variableList;
+    variableList.push_back(variable);
+    listEquivalentVariables(variable, variableList);
+
+    libcellml::ComponentPtr component = std::dynamic_pointer_cast<libcellml::Component>(variable->parent());
+
+    if (component != nullptr) {
+        std::cout << "Tracing: " << component->name() << " -> "
+                  << variable->name();
+        if (variable->units() != nullptr) {
+            std::cout << " [" << variable->units()->name() << "]";
+        }
+        if (variable->initialValue() != "") {
+            std::cout << ", initial = " << variable->initialValue();
+        }
+        std::cout << std::endl;
+    }
+
+    if (variableList.size() > 1) {
+        for (auto &e : variableList) {
+            component = std::dynamic_pointer_cast<libcellml::Component>(e->parent());
+            if (component != nullptr) {
+                std::cout << "    - " << component->name() << " -> " << e->name();
+                if (e->units() != nullptr) {
+                    std::cout << " [" << e->units()->name() << "]";
+                }
+                if (e->initialValue() != "") {
+                    std::cout << ", initial = " << e->initialValue();
+                }
+                std::cout << std::endl;
+            } else {
+                std::cout << "Variable " << e->name() << " does not have a parent component." << std::endl;
+            }
+        }
+    } else {
+        std::cout << "    - Not connected to any equivalent variables." << std::endl;
+    }
+}
+// END printEquivalentVariableSet
+
+// START printImportDependencies
+void doPrintImportDependencies(const libcellml::ModelPtr &model, std::string &spacer) {
+    // Function to recursively iterate through the import dependencies in this model, and 
+    // print their URL and what they require to the terminal.
+    if(model->hasUnresolvedImports()) {
+        return;
+    }
+    std::cout << spacer << "Model '" << model->name() << "' imports:" << std::endl;
+
+    const std::vector<std::string> imports = model->importRequirements();
+    for (const auto i : imports) {
+        std::cout << "    - import: " << i << std::endl;
+    }
+}
+
+void printImportDependencies(const libcellml::ModelPtr &model){
+    std::string spacer = " ";
+    doPrintImportDependencies(model, spacer);
+}
+// END printImportDependencies
+
+bool makeDirectory(const std::string &sPath) {
+    // std::string sPath = "/tmp/test";
+    mode_t nMode = 0733; // UNIX style permissions
+    int nError = 0;
+    #if defined(_WIN32)
+    nError = _mkdir(sPath.c_str()); // can be used on Windows
+    #else 
+    nError = mkdir(sPath.c_str(), nMode); // can be used on non-Windows
+    #endif
+    if (nError != 0) {
+        // std::cout << "OOPS! Something went wrong trying to create directory: " << sPath << std::endl;
+        return false;
+    }
+    return true;
+}

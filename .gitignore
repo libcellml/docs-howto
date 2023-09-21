@@ -1,0 +1,25 @@
+# OS X hidden system files
+.DS_Store
+
+# Ignore the build directory
+build/
+
+# Eclipse project files
+.project
+.pydevproject
+.settings/
+
+# Qt Creator generated files
+CMakeLists.txt.user
+*.autosave
+
+# PyCharm generated files
+.idea/
+
+# VS Code system files
+.vscode/
+*.profraw
+howto/images/sineComparisonExample_solution.xlsx
+
+# Compiled Python bytecode.
+__pycache__
