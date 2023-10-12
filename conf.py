@@ -62,11 +62,11 @@ extlinks = {
     # NB for deployment outside of the libcellml.org domain, you will need to include the root of the href for the
     # :api: shortcut here.  This only works internally.
     'api': (f'/documentation/{LIBRARY_VERSION}/api/classlibcellml_1_1%s', ''),
-    'asides': ('/documentation/asides/%s', ''),
+    'aside': (f'/documentation/{LIBRARY_VERSION}/aside/%s', ''),
     'cellml2': ('https://cellml-specification.readthedocs.io/en/latest/%s', ''),
     'installation': ('/documentation/installation/%s', ''),
     'theory': ('/documentation/theory/%s', ''),
-    'tutorial': (f'/documentation/{LIBRARY_VERSION}/tutorials/tuturial%s/index', ''),
+    'tutorial': (f'/documentation/{LIBRARY_VERSION}/tutorials/tutorial%s/index', ''),
 }
 
 
