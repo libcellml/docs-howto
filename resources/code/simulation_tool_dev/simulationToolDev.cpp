@@ -10,6 +10,7 @@
  * - output in the desired format.
  */
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -18,13 +19,17 @@
 
 #include "utilities.h"
 
-int main()
+int main(int argc, char *argv[])
 {
     // STEP 1
     // Parse a CellML file into a model.
 
     // Read the file containing the CellML model into a string.
-    std::string inFileName = "simulationExample.cellml";
+    std::filesystem::path inFileName = "simulationExample.cellml";
+    if (argc > 1) {
+        inFileName = argv[1];
+    }
+
     std::ifstream inFile(inFileName);
     std::stringstream inFileContents;
     inFileContents << inFile.rdbuf();
@@ -45,7 +50,8 @@ int main()
 
         // Submit the model to the importer and the absolute location 
         // against which the import reference paths will be resolved.
-        importer->resolveImports(model, "");
+        auto importPath = inFileName.remove_filename();
+        importer->resolveImports(model, importPath);
 
         printIssues(importer);
 
@@ -80,27 +86,25 @@ int main()
     // Create a Generator instance.  Note that by default this uses the C language profile.
     auto generator = libcellml::Generator::create();
 
-    // Pass the generator the model for processing.
-    generator->setModel(analyser->model());
-    printIssues(generator);
+    // Get the analyser model for processing.
+    auto analysedModel = analyser->analyserModel();
 
     // STEP 6
     // Retrieve and write the interface code (*.h) and implementation code (*.c) to files.
     std::ofstream outFile("sineComparisonExample.h");
-    outFile << generator->interfaceCode();
+    outFile << generator->interfaceCode(analysedModel);
     outFile.close();
 
     outFile.open("sineComparisonExample.c");
-    outFile << generator->implementationCode();
+    outFile << generator->implementationCode(analysedModel);
     outFile.close();
 
     // If required, change the generator profile to Python.
     auto profile = libcellml::GeneratorProfile::create(libcellml::GeneratorProfile::Profile::PYTHON);
-    generator->setProfile(profile);
 
     // Retrieve and write the implementation code (*.py) to a file.
     outFile.open("sineComparisonExample.py");
-    outFile << generator->implementationCode();
+    outFile << generator->implementationCode(analysedModel, profile);
     outFile.close();
 
     // END

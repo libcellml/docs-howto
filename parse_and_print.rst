@@ -28,39 +28,14 @@ As with the :code:`Parser` and the :code:`Validator`, the :code:`Printer` also r
 
 .. tabs::
 
-  .. code-tab:: c++
+  .. tab:: C++
 
-    // Create a Printer instance.
-    auto printer = libcellml::Printer::create();
+    .. literalinclude:: resources/code/parse_and_print/parse_and_print.cpp
+      :language: cpp
 
-    // The output of the printModel function is a string representing the serialised input model.
-    std::string serialisedModelString = printer->printModel(model);
+  .. tab:: Python
 
-    // Check the printer for issues.
-    assert(printer->issueCount() == 0);
-
-    // Write the serialised string to a file.
-    std::string outFileName = "my_printed_file.cellml";
-    std::ofstream outFile(outFileName);
-    outFile << serialisedModelString;
-    outFile.close();
-
-  .. code-tab:: py
-
-    from libcellml import Printer
-
-    # Create a Printer instance.
-    printer = Printer()
-
-    # The output of the printModel function is a string representing the serialised input model.
-    serialised_model = printer.printModel(model)
-
-    # Check the printer for issues.
-    assert(printer.issueCount() == 0)
-
-    # Write the string to a file.
-    write_file = open("my_printed_file.cellml", "w")
-    write_file.write(serialised_model)
-    write_file.close()
+    .. literalinclude:: resources/code/parse_and_print/parse_and_print.py
+      :language: python
 
 Details of any issues that the printer encounters and records can be retrieved as described on the :ref:`Retrieve Issue items<get_issues>` page.

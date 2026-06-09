@@ -269,3 +269,22 @@ def print_equivalent_variable_set(variable):
         else:
             print("    - Not connected to any equivalent variables.")
 # END print_equivalent_variable_set
+
+# START print_import_dependencies
+def do_print_import_dependencies(model, spacer):
+    # Function to recursively iterate through the import dependencies in this model, and 
+    # print their URL and what they require to the terminal.
+    if model.hasUnresolvedImports():
+        return
+    
+    print(spacer + "Model '" + model.name() + "' imports:")
+
+    imports = model.importRequirements()
+    for i in imports:
+        print("    - import: " + i)
+
+
+def print_import_dependencies(model):
+    spacer = " "
+    do_print_import_dependencies(model, spacer)
+# END print_import_dependencies

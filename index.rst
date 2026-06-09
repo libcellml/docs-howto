@@ -14,7 +14,7 @@ How to do stuff
    :maxdepth: 2
    
    include_libcellml
-   serialise_model
+   parse_and_print
    view_model
    edit_model
    check_model
