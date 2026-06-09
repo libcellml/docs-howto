@@ -34,7 +34,6 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.extlinks',
     'sphinx.ext.autosectionlabel',
-    'hoverxref.extension',          # Enables tooltips and previews on hover
     'sphinx_tabs.tabs'              # Tabs (esp for code blocks)
 ]
 
@@ -42,7 +41,7 @@ extensions = [
 templates_path = ['static/templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = {'.rst': 'restructuredtext'}
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'

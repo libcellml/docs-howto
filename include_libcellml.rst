@@ -7,17 +7,10 @@ Include the libCellML library in your project
 If you've followed :installation:`the instructions for installing libCellML<build_from_source>` then the library is available for use as shown below.
 Note that this doesn't invoke the libCellML namespace, so classes are accessed using the :code:`libcellml::` prefix.
 
-.. code-block:: cpp
+.. literalinclude:: include_libcellml.cpp
+  :language: cpp
 
-  // main.cpp
-  #include <libcellml>
+In Python, the whole library can be imported at once, or classes can be imported individually as required.
 
-  auto model = libcellml::Model::create();
-
-In Python classes can be imported individually as required, or the whole library imported at once.
-
-.. code-block:: python
-
-  # main.py
-  import libcellml                       # import the entire library, or
-  from libcellml import Model, Variable  # import specific classes as needed
+.. literalinclude:: include_libcellml.py
+  :language: python

@@ -13,12 +13,17 @@ How to do stuff
 .. toctree:: 
    :maxdepth: 2
    
-   include_libcellml.rst
-   serialise_model.rst
-   view_model.rst
-   edit_model.rst
-   check_model.rst
-   resolve_imports.rst
-   generate_code.rst
-   solve_model.rst
-   annotate_model.rst
+   include_libcellml
+   serialise_model
+   view_model
+   edit_model
+   check_model
+   resolve_imports
+   generate_code
+   solve_model
+   annotate_model
+
+.. toctree::
+   :hidden:
+
+   resources/code/solver/index
