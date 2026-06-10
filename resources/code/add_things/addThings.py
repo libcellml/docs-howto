@@ -1,5 +1,6 @@
 from libcellml import Component, Variable
 
+
 if __name__ == '__main__':
 
     # Create a variable and a component.
@@ -20,10 +21,10 @@ if __name__ == '__main__':
     # At this point, if the operation was successful, the variable
     # my_variable has a parent of my_component, and exists in the collection
     # of variables.  The component's variable count has been updated too.
-    assert(success == true)
+    assert(success)
     assert(my_component.variableCount() == 1)
-    assert(my_variable.parent() == my_component)
-    assert(my_component.variable(0) == my_variable)
+    assert(my_variable.parent().equals(my_component))
+    assert(my_component.variable(0).equals(my_variable))
 
     # Now see what happens if that same variable is added to another
     # component, my_other_component, which is initially empty.
@@ -35,8 +36,8 @@ if __name__ == '__main__':
 
     # If successful, the variable will have been moved to the new component, and
     # removed from the old one.
-    assert(success == true)
+    assert(success)
     assert(my_other_component.variableCount() == 1)
-    assert(my_other_component.variable(0) == my_variable)
-    assert(my_variable.parent() == my_other_component)
+    assert(my_other_component.variable(0).equals(my_variable))
+    assert(my_variable.parent().equals(my_other_component))
     assert(my_component.variableCount() == 0)
