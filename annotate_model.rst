@@ -33,21 +33,19 @@ The :code:`id` attribute for each of these entity types can be retrieved using t
 
 .. tabs::
 
-  .. code-tab:: c++
+  .. tab:: C++
 
-    // Set the ID attribute for a Model item.
-    model->setId("myModelId");
+    .. literalinclude:: /resources/code/annotate_model/annotate_model.cpp
+       :language: cpp
+       :start-after: start - ANNOTATE_MODEL 1
+       :end-before: end - ANNOTATE_MODEL 1
 
-    // Retrieve the ID attribute from a Model item.
-    std::string myModelIdString = model->id();
+  .. tab:: Python
 
-  .. code-tab:: py
-
-    # Set the ID attribute for a Model item.
-    model.setId("myModelId")
-
-    # Retrieve the ID attribute from a Model item.
-    my_model_id_string = model.id()
+    .. literalinclude:: /resources/code/annotate_model/annotate_model.py
+       :language: python
+       :start-after: start - ANNOTATE_MODEL 1
+       :end-before: end - ANNOTATE_MODEL 1
 
 Annotation tools for other item types
 =====================================
@@ -71,67 +69,26 @@ Consider the simple example shown below.
 
     Show CellML syntax
 
-  .. code-block:: xml
-
-    <model>
-      <component name="c1" id="c1id">
-        <variable name="v1" id="v1id" />
-      </component>
-      <component name="c2" id="c2id">
-        <variable name="v2" id="v2id" />
-      </component>
-
-      <!-- The variable equivalence is stored separately to the variables themselves. -->
-      <connection component1="c1" component2="c2" id="c1c2id" >
-        <map_variables variable1="v1" variable2="v2" id="v1v2id" />
-      </connection>
-    </model>
+  .. literalinclude:: /resources/code/annotate_model/annotate_model.cpp
+      :language: xml
+      :start-after: start - ANNOTATE_MODEL_XML 1
+      :end-before: end - ANNOTATE_MODEL_XML 1
 
 .. tabs::
 
-  .. code-tab:: c++
+  .. tab:: C++
 
-    // Set the ID of the mapping between variables v1 and v2.
-    Variable::setEquivalentVariableId(v1, v2, "v1v2Id");
+    .. literalinclude:: /resources/code/annotate_model/annotate_model.cpp
+       :language: cpp
+       :start-after: start - ANNOTATE_MODEL 2
+       :end-before: end - ANNOTATE_MODEL 2
 
-    // Get the ID of the mapping between variables v1 and v2. Note that
-    // equivalences and connections go both ways, so the ID is the same
-    // whichever order the variables are specified.
-    std::string v1v2IdString = Variable::equivalentVariableId(v1, v2);
+  .. tab:: Python
 
-    // Since a connection item between two components will only exist
-    // when there is a variable equivalence between at least one each
-    // of their children.  The connection is accessed through those
-    // child variable pairs, just as the equivalence mapping itself is.
-    Variable::setConnectionId(v1, v2, "c1c2id");
-
-    // Get the ID of the connection between the parent components of
-    // equivalent variable pair. Note that equivalences and connections
-    // go both ways, so the ID is the same whichever order the variables
-    // are specified.
-    std::string c1c2IdString = Variable::connectionId(v1, v2);
-
-  .. code-tab:: py
-
-    # Set the ID of the mapping between variables v1 and v2.
-    Variable.setEquivalentVariableId(v1, v2, "v1v2Id")
-
-    # Get the ID of the mapping between variables v1 and v2.
-    # Note that equivalences and connections go both ways, so 
-    # the ID is the same whichever order the variables are specified.
-    v1v2_id_string = Variable.equivalentVariableId(v1, v2)
-
-    # Since a connection item between two components will only exist
-    # when there is a variable equivalence between at least one each
-    # of their children.  The connection is accessed through those
-    # child variable pairs, just as the equivalence mapping itself is.
-    Variable.setConnectionId(v1, v2, "c1c2id")
-
-    # Get the ID of the connection between the parent components
-    # of equivalent variable pair.
-    # Note that equivalences and connections go both ways, so 
-    # the ID is the same whichever order the variables are specified.
-    c1c2IdString = Variable.connectionId(v1, v2)
+    .. literalinclude:: /resources/code/annotate_model/annotate_model.py
+       :language: python
+       :start-after: start - ANNOTATE_MODEL 2
+       :end-before: end - ANNOTATE_MODEL 2
 
 Encapsulation and component references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -152,48 +109,29 @@ These are accessed through the :code:`encapsulationId()` functions, as shown bel
 
     Show CellML syntax
 
-  .. code-block:: xml
-
-    <model>
-      <component name="grandparent" id="grandparentComponentId" />
-      <component name="parent" id="parentComponentId" />
-      <component name="child" id="childComponentId" />
-
-      <!-- The ids of the components in the encapsulation structure are distinct
-           from the ids on the components themselves. -->
-      <encapsulation id="encapsId">
-        <component_ref component="grandparent" id="grandparentEncapsId" >
-          <component_ref component="parent" id="parentEncapsId" >
-            <component_ref component="child" id="childEncapsId" >
-          </component_ref>
-        </component_ref>
-      </encapsulation>
-    </model>
+  .. literalinclude:: /resources/code/annotate_model/annotate_model.cpp
+     :language: xml
+     :start-after: start - ANNOTATE_MODEL_XML 2
+     :end-before: end - ANNOTATE_MODEL_XML 2
 
 There is only one encapsulation in a model, and its :code:`id` attribute is accessed using the very simple functions from the model instance.
 The position of each component within that encapsulation structure is referenced using the same functions, but on the component instance instead.
 
 .. tabs::
 
-  .. code-tab:: c++
+  .. tab:: C++
 
-    // Set the encapsulation ID.
-    model->setEncapsulationId("encapsId");
-    grandparentComponent->setEncapsulationId("grandparentEncapsId");
+    .. literalinclude:: /resources/code/annotate_model/annotate_model.cpp
+       :language: cpp
+       :start-after: start - ANNOTATE_MODEL 3
+       :end-before: end - ANNOTATE_MODEL 3
 
-    // Get the encapsulation ID.
-    std::string modelEncapsulationId = model->encapsulationId();
-    std::string grandparentEncapsulationId = grandparentComponent->encapsulationId(); 
+  .. tab:: Python
 
-  .. code-tab:: py
-
-    # Set the encapsulation ID.
-    model.setEncapsulationId("encapsId")
-    grandparent_component.setEncapsulationId("grandparentEncapsId")
-
-    # Get the encapsulation ID.
-    model_encapsulation_id = model.encapsulationId()
-    grandparent_encapsulation_id = grandparent_component.encapsulationId()
+    .. literalinclude:: /resources/code/annotate_model/annotate_model.py
+       :language: python
+       :start-after: start - ANNOTATE_MODEL 3
+       :end-before: end - ANNOTATE_MODEL 3
 
 Unit item children; reset_value, test_value item children
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -207,52 +145,19 @@ Note that there are several overloads of the arguments for this function; please
 
 .. tabs::
 
-  .. code-tab:: c++
+  .. tab:: C++
 
-    // Create a Units item representing millimetre^3 per second.
-    auto mm3PerSecond = libcellml::Units::create("mm3PerSecond");
+    .. literalinclude:: /resources/code/annotate_model/annotate_model.cpp
+       :language: cpp
+       :start-after: start - ANNOTATE_MODEL 4
+       :end-before: end - ANNOTATE_MODEL 4
 
-    // Add the per second part with the ID "perSecondUnitId".
-    mm3PerSecond->addUnit("second", 0, -1.0, 1.0, "perSecondUnitId");
+  .. tab:: Python
 
-    // Add the mm^3 part with with the ID "mmCubedUnitId".
-    mm3PerSecond->addUnit("metre", "milli", 3.0, 1.0, "mmCubedUnitId");
-
-    // Check that the ID has been assigned to the Unit children.
-    auto checkId1 = mm3PerSecond->unitId(0); // returns "perSecondUnitId".
-    auto checkId2 = mm3PerSecond->unitId(1); // returns "mmCubedUnitId".
-
-    // Change the ID of the second (ie: index = 1) child to be "millimetreCubedUnitId":
-    mm3PerSecond->setUnitId(1, "millimetreCubedUnitId");
-
-    // Retrieve the unit attributes for the first (index = 0) unit item, including the ID attribute:
-    std::string unitReference;
-    std::string unitPrefix;
-    double unitExponent;
-    double unitMultiplier;
-    std::string unitId;
-    mm3PerSecond->unitAttributes(0, unitReference, unitPrefix, unitExponent, unitMultiplier, unitId);
-
-  .. code-tab:: py
-
-    # Create a Units item representing millimetre^3 per second.
-    mm3_per_second = Units.create("mm3PerSecond")
-
-    # Add the per second part with the ID "perSecondUnitId".
-    mm3_per_second.addUnit("second", 0, -1.0, 1.0, "perSecondUnitId")
-
-    # Add the mm^3 part with with the ID "mmCubedUnitId".
-    mm3_per_second.addUnit("metre", "milli", 3.0, 1.0, "mmCubedUnitId")
-
-    # Retrieve both ids from the child units.
-    check_1 = mm3_per_second.unitId(0) # returns "perSecondUnitId"
-    check_2 = mm3_per_second.unitId(1) # returns "mmCubedUnitId"
-
-    # Change the ID of the second (ie: index = 1) Unit child to be "millimetreCubedUnitId".
-    mm3_per_second.setUnitId(1, "millimetreCubedUnitId")
-
-    # Retrieve the unit attributes for the second (index = 0) unit item, including the ID attribute:
-    mm3PerSecond.unitAttributes(0, unitReference, unitPrefix, unitExponent, unitMultiplier, unitId)
+    .. literalinclude:: /resources/code/annotate_model/annotate_model.py
+       :language: python
+       :start-after: start - ANNOTATE_MODEL 4
+       :end-before: end - ANNOTATE_MODEL 4
 
 Annotator ``Type`` and returned types
 =====================================
