@@ -47,34 +47,41 @@ Get the attribute :code:`xyz` using the camelCase function :code:`xyx()` without
 
 For example:
 
-.. code-block:: cpp
+.. tabs::
 
-    // Retrieving the name attribute from the myModel item:
-    std::string myModelName = myModel->name();
+  .. tab:: C++
 
-    // Retrieving the initial value of the myVariable item:
-    std::string myInitialValue = myVariable->initialValue();
+    .. literalinclude:: resources/code/view_model/view_model.cpp
+      :language: cpp
+      :start-after: // start - VIEW_MODEL 1
+      :end-before: // end - VIEW_MODEL 1
 
-.. code-block:: py
+  .. tab:: Python
 
-    # Retrieving the name attribute from the my_model item:
-    my_model_name = my_model.name()
-
-    # Retrieving the initial value of the myVariable item:
-    my_initial_value = my_variable.initialValue()
+    .. literalinclude:: resources/code/view_model/view_model.py
+      :language: python
+      :start-after: # start - VIEW_MODEL 1
+      :end-before: # end - VIEW_MODEL 1
 
 Note that the return value's type will vary depending on the function.
 For example, a :code:`Variable` item pointer is returned as the :code:`testVariable()` attribute value for a :code:`Reset` item:
 
-.. code-block:: cpp
 
-  // Retrieve the test variable from the myReset item:
-  libcellml::VariablePtr myTestVariable = myReset->testVariable();
+.. tabs::
 
-.. code-block:: python
+  .. tab:: C++
 
-  # Retrieve the test variable from the my_reset item:
-  my_test_varible = my_reset->testVariable()
+    .. literalinclude:: resources/code/view_model/view_model.cpp
+      :language: cpp
+      :start-after: // start - VIEW_MODEL 2
+      :end-before: // end - VIEW_MODEL 2
+
+  .. tab:: Python
+
+    .. literalinclude:: resources/code/view_model/view_model.py
+      :language: python
+      :start-after: # start - VIEW_MODEL 2
+      :end-before: # end - VIEW_MODEL 2
 
 View collections owned by an item
 ---------------------------------
@@ -89,51 +96,19 @@ The following example shows how all variables in a component can be listed.
 
 .. tabs::
 
-  .. code-tab:: c++
+  .. tab:: C++
 
-    // Loop through variables in the component myComponent and retrieve their names.
-    //    NOTE that indexing starts from zero.
-    for(size_t v = 0; v < myComponent->variableCount(); ++v) {
+    .. literalinclude:: resources/code/view_model/view_model.cpp
+      :language: cpp
+      :start-after: // start - VIEW_MODEL 3
+      :end-before: // end - VIEW_MODEL 3
 
-      // Retrieve the Variable item at index v:
-      auto myVariable = myComponent->variable(v);
+  .. tab:: Python
 
-      // Retrieve the name of the myVariable item:
-      auto myVariableName = myVariable->name();
-    }
-
-    // Retrieve a variable called "helloThere" by name.
-    //    NOTE that a nullptr will be returned if no variable of that name is found.
-    auto myHelloThereVariable = myComponent->variable("helloThere");
-
-    // In this case, the myMissingVariable will be a nullptr:
-    auto myMissingVariable = myComponent->variable("nameThatDoesntExist");
-
-    // This will cause a segfault as myMissingVariable is null:
-    auto myMissingName = myMissingVariable->name();
-
-  .. code-tab:: py
-
-    # Loop through variables in the component myComponent and retrieve their names.
-    #    NOTE that indexing starts from zero:
-    for v in range(0, my_component.variableCount()):
-
-      # Retrieve the Variable item at index v:
-      my_variable = my_component.variable(v)
-
-      # Retrieve the name of the myVariable item:
-      my_variable_name = my_variable.name()
-
-    # Retrieve a variable called "helloThere" by name.
-    #    NOTE that None will be returned if no variable of that name is found.
-    my_hello_there_variable = my_component.variable("helloThere")
-
-    # In this case, the my_missing_variable will be None:
-    my_missing_variable = myComponent.variable("nameThatDoesntExist")
-
-    # This will cause a segfault as my_missing_variable is None:
-    my_missing_name = my_missing_variable.name()
-
+    .. literalinclude:: resources/code/view_model/view_model.py
+      :language: python
+      :start-after: # start - VIEW_MODEL 3
+      :end-before: # end - VIEW_MODEL 3
 
 Some gotchas
 ------------
@@ -184,26 +159,19 @@ This can be confusing if the simple :code:`componentCount()` function on a model
 
 .. tabs::
 
-  .. code-tab:: c++
+  .. tab:: C++
 
-    // The number of components owned by the grandfather model refers *only* to its direct children:
-    auto grandfatherHasTwoKids = grandfather->componentCount(); // returns 2
+    .. literalinclude:: resources/code/view_model/view_model.cpp
+      :language: cpp
+      :start-after: // start - VIEW_MODEL 4
+      :end-before: // end - VIEW_MODEL 4
 
-    // Each component must be interrogated individually to determine its children.
-    //    Note that the uncle component is the 0th child of the grandfather model.
-    auto uncleHasNoKids = grandfather->component(0)->componentCount();          // returns 0
-    auto motherHasTwoKids = grandfather->component("Mother")->componentCount(); // returns 2
+  .. tab:: Python
 
-  .. code-tab:: py
-
-    # The number of components owned by the grandfather model refers *only* to its direct children:
-    grandfather_has_two_kids = grandfather->componentCount() # returns 2
-
-    # Each component must be interrogated individually to determine its children.
-    #    Note that the uncle component is the 0th child of the grandfather model.
-    uncle_has_no_kids = grandfather.component(0).componentCount()          # returns 0
-    mother_has_two_kids = grandfather.component("Mother").componentCount() # returns 2
-
+    .. literalinclude:: resources/code/view_model/view_model.py
+      :language: python
+      :start-after: # start - VIEW_MODEL 4
+      :end-before: # end - VIEW_MODEL 4
 
 Useful snippets for viewing a model
 ===================================
