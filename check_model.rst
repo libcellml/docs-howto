@@ -53,70 +53,19 @@ Issues can also be retrieved from subgroups based on their severity, as shown in
 
 .. tabs::
 
-  .. code-tab:: cpp
+  .. tab:: C++
 
-      // Iterate through all the issues in a Validator, regardless of level, and print to the terminal.
-      for (size_t i = 0; i < validator->issueCount(); ++i) {
-        // Retrieve the i-th issue and store it in the variable "myIssue".
-        libcellml::IssuePtr myIssue = validator->issue(i);
+    .. literalinclude:: resources/code/check_model/check_model.cpp
+      :language: cpp
+      :start-after: // start CHECK_MODEL 1
+      :end-before: // end CHECK_MODEL 1
 
-        // Print the issue's description:
-        std::cout << myIssue->description() << std::endl;
+  .. tab:: Python
 
-        // Print the issue's URL.  This is a URL at which more 
-        // information could be found about the cause and corrections
-        // are needed to avoid it.
-        std::cout << myIssue->url() << std::endl;
-
-        // Validator only: Print the issue's reference. This is 
-        // the heading reference in the normative specification which 
-        // relates to this issue.
-        std::cout << myIssue->referenceHeading() << std::endl;
-      }
-
-      // Retrieve the second ERROR level issue from a Printer. Note indexing from 0.
-      auto secondError = printer->error(1);
-
-      // Retrieve the last WARNING level issue from a Parser.
-      auto lastWarning = parser->warning(parser->warningCount()-1);
-
-      // Iterate through all HINT level issues in a Generator.
-      for (size_t h = 0; h < generator->hintCount(); ++h) {
-        // Retrieve the h-th hint and store it in the variable "myHint".
-        auto myHint = generator->hint(h);
-      }
-
-  .. code-tab:: python
-
-      # Iterate through all the issues in a Validator, regardless of level, and print to the terminal.
-      for i in range(0, validator.issueCount()):
-        # Retrieve the i-th issue and store it in the variable "my_issue".
-        my_issue = validator.issue(i)
-
-        # Print the issue's description:
-        print(my_issue.description())
-
-        # Print the issue's URL.  This is a URL at which more 
-        # information could be found about the cause and corrections
-        # are needed to avoid it.
-        print(my_issue.url())
-
-        # Validator only: Print the issue's reference. This is 
-        # the heading reference in the normative specification which 
-        # relates to this issue.
-        print(my_issue.referenceHeading())
-
-      # Retrieve the second ERROR level issue from a Printer. Note indexing from 0.
-      second_error = printer.error(1)
-
-      # Retrieve the last WARNING level issue from a Parser.
-      last_warning = parser.warning(parser.warningCount() - 1)
-
-      # Iterate through all HINT level issues in a Generator.
-      for h in range(0, generator.hintCount()):
-        # Retrieve the h-th hint and store it in the variable "my_hint".
-        my_hint = generator.hint(h)
-
+    .. literalinclude:: resources/code/check_model/check_model.py
+      :language: python
+      :start-after: # start CHECK_MODEL 1
+      :end-before: # end CHECK_MODEL 1
 
 Each :code:`Issue` also contains the following attributes:
 
@@ -146,39 +95,19 @@ Each :code:`Issue` also contains the following attributes:
 
 .. tabs::
 
-  .. code-tab:: cpp
+  .. tab:: C++
 
-    // Retrieve and print the description of the issue.
-    std::cout << issue->description() << std::endl;
+    .. literalinclude:: resources/code/check_model/check_model.cpp
+      :language: cpp
+      :start-after: // start CHECK_MODEL 2
+      :end-before: // end CHECK_MODEL 2
 
-    // Retrieve and print the reference heading number, if related to CellML2.0 specification and format.
-    std::cout << issue->referenceHeading() << std::endl;
+  .. tab:: Python
 
-    // Retrieve and print the URL for more help and information about the issue. 
-    std::cout << issue->url() << std::endl;
-
-    // Retrieve the item type - a libcellml::CellmlElementType enum - for the issue.
-    auto myType = issue->item()->type();
-
-    // Retrieve the level - a libcellml::Issue::LEVEL enum - for the issue.
-    auto myLevel = issue->level();
-
-  .. code-tab:: python
-
-    # Retrieve and print the description of the issue.
-    print(issue.description())
-
-    # Retrieve and print the reference heading number, if related to CellML2.0 specification and format.
-    print(issue.referenceHeading())
-
-    # Retrieve and print the URL for more help and information about the issue. 
-    print(issue.url())
-
-    # Retrieve the cause - a libcellml.CellmlElementType enum - for the issue.
-    my_type = issue.item().type()
-
-    # Retrieve the level - a libcellml.Issue.LEVEL enum - for the issue.
-    my_level = issue.level()
+    .. literalinclude:: resources/code/check_model/check_model.py
+      :language: python
+      :start-after: # start CHECK_MODEL 2
+      :end-before: # end CHECK_MODEL 2
 
 Useful functions for dealing with Issues
 ========================================
