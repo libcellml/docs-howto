@@ -69,12 +69,12 @@ An additional :code:`removeAllEquivalences` function will completely remove the 
 
 Please see the :api:`API Variable <Variable>` page for details of these functions.
 
+Assuming that variables A and B are in different components, and that those components are
+available for connection with one another (parent-child, or sibling relationship).
+
 .. tabs::
 
   .. code-tab:: c++
-
-    // Assuming that variables A and B are in different components, and that those components are
-    // available for connection with one another (parent-child, or sibling relationship).
 
     // Add variables A and B to the same equivalent variable set.
     auto isAconnectedToB = libcellml::Variable::addEquivalence(A, B);
@@ -83,9 +83,6 @@ Please see the :api:`API Variable <Variable>` page for details of these function
     auto isCdisconnectedFromD = libcellml::Variable::removeEquivalence(C, D);
 
   .. code-tab:: py
-
-    # Assuming that variables A and B are in different components, and that those components are
-    # available for connection with one another (parent-child, or sibling relationship).
 
     # Add variables A and B to the same equivalent variable set.
     isAconnectedToB = Variable.addEquivalence(A, B)
