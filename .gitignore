@@ -23,3 +23,5 @@ howto/images/sineComparisonExample_solution.xlsx
 
 # Compiled Python bytecode.
 __pycache__
+
+*_solution.txt

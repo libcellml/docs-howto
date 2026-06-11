@@ -17,8 +17,9 @@
 #include <iostream>
 #include <map>
 #include <sstream>
+#include <filesystem>
 
-#include "modelToSolve.h"
+#include "generated_include.h"
 
 std::map<std::string, std::string> processArguments(int argc, char **argv);
 
@@ -63,14 +64,16 @@ int main(int argc, char **argv)
     double time = 0.0;
     auto myStateVariables = createStatesArray();
     auto myRates = createStatesArray();
-    auto myVariables = createVariablesArray();
+    auto myConstants = createConstantsArray();
+    auto myComputedConstants = createComputedConstantsArray();
+    auto myAlgebraicVariables = createAlgebraicVariablesArray();
 
     // STEP 3
     // Make use of the access functions provided to initialise the variable arrays.
-    initialiseStatesAndConstants(myStateVariables, myVariables);
-    computeComputedConstants(myVariables);
-    computeRates(time, myStateVariables, myRates, myVariables);
-    computeVariables(time, myStateVariables, myRates, myVariables);
+    initialiseArrays(myStateVariables, myRates, myConstants, myComputedConstants, myAlgebraicVariables);
+    computeComputedConstants(time, myStateVariables, myRates, myConstants, myComputedConstants, myAlgebraicVariables);
+    computeRates(time, myStateVariables, myRates, myConstants, myComputedConstants, myAlgebraicVariables);
+    computeVariables(time, myStateVariables, myRates, myConstants, myComputedConstants, myAlgebraicVariables);
 
     // STEP 4
     // Prepare a file for writing during the solution process.
@@ -79,8 +82,8 @@ int main(int argc, char **argv)
     for (size_t i = 0; i < STATE_COUNT; ++i) {
         std::cout << "      " << STATE_INFO[i].name << "(" << VOI_INFO.name << " = 0) = " << myStateVariables[i] << std::endl;
     }
-    for (size_t i = 0; i < VARIABLE_COUNT; ++i) {
-        std::cout << "      " << VARIABLE_INFO[i].name << "(" << VOI_INFO.name << " = 0) = " << myVariables[i] << std::endl;
+    for (size_t i = 0; i < ALGEBRAIC_VARIABLE_COUNT; ++i) {
+        std::cout << "      " << ALGEBRAIC_VARIABLE_INFO[i].name << "(" << VOI_INFO.name << " = 0) = " << myAlgebraicVariables[i] << std::endl;
     }
 
     std::cout << std::endl;
@@ -93,8 +96,8 @@ int main(int argc, char **argv)
     for (size_t s = 0; s < STATE_COUNT; ++s) {
         outFile << "\t" << STATE_INFO[s].name;
     }
-    for (size_t s = 0; s < VARIABLE_COUNT; ++s) {
-        outFile << "\t" << VARIABLE_INFO[s].name;
+    for (size_t s = 0; s < ALGEBRAIC_VARIABLE_COUNT; ++s) {
+        outFile << "\t" << ALGEBRAIC_VARIABLE_INFO[s].name;
     }
     outFile << std::endl;
 
@@ -104,8 +107,8 @@ int main(int argc, char **argv)
     for (size_t s = 0; s < STATE_COUNT; ++s) {
         outFile << "\t" << myStateVariables[s];
     }
-    for (size_t s = 0; s < VARIABLE_COUNT; ++s) {
-        outFile << "\t" << myVariables[s];
+    for (size_t s = 0; s < ALGEBRAIC_VARIABLE_COUNT; ++s) {
+        outFile << "\t" << myAlgebraicVariables[s];
     }
     outFile << std::endl;
 
@@ -115,19 +118,19 @@ int main(int argc, char **argv)
     // Solution columns in output file
     for (size_t step = 1; step < stepCount; ++step) {
         time = step * stepSize;
-        computeRates(time, myStateVariables, myRates, myVariables);
+        computeRates(time, myStateVariables, myRates, myConstants, myComputedConstants, myAlgebraicVariables);
         outFile << step << "\t " << time;
         for (size_t s = 0; s < STATE_COUNT; ++s) {
             myStateVariables[s] = myStateVariables[s] + myRates[s] * stepSize;
             outFile << "\t" << myStateVariables[s];
         }
-        // The variables in the "myVariables" array are those which do not affect the calculation
+        // The variables in the "myAlgebraicVariables" array are those which do not affect the calculation
         // of rates or state variables.  They only need to be computed when outputting the 
         // results of a timestep: if you're not saving every timestep, then you can skip this
         // until you are.
-        computeVariables(time, myStateVariables, myRates, myVariables); 
-        for (size_t s = 0; s < VARIABLE_COUNT; ++s) {
-            outFile << "\t" << myVariables[s];
+        computeVariables(time, myStateVariables, myRates, myConstants, myComputedConstants, myAlgebraicVariables);
+        for (size_t s = 0; s < ALGEBRAIC_VARIABLE_COUNT; ++s) {
+            outFile << "\t" << myAlgebraicVariables[s];
         }
         outFile << "\n";
     }
@@ -136,8 +139,10 @@ int main(int argc, char **argv)
     // Housekeeping.
 
     deleteArray(myStateVariables);
-    deleteArray(myVariables);
+    deleteArray(myAlgebraicVariables);
     deleteArray(myRates);
+    deleteArray(myConstants);
+    deleteArray(myComputedConstants);
 
     // END
 
@@ -161,8 +166,10 @@ std::map<std::string, std::string> processArguments(int argc, char **argv)
 
     std::map<std::string, std::string> argMap;
     std::string value = argv[0];
-    value.erase(0, 8); // removes the "solve_" from the start of the executable name to get back to the input
-    argMap["input"] = value;
+    std::filesystem::path p(value);
+    std::string filename = p.stem();
+    filename.erase(0, 6); // removes the "solve_" from the start of the executable name to get back to the input
+    argMap["input"] = filename;
 
     for (size_t i = 0; i < argc - 1; ++i) {
         if (argv[i][0] == '-') {
