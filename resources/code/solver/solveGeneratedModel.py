@@ -16,6 +16,7 @@
 
 import sys
 import importlib
+import importlib.util
 
 from generateModel import generate_solvable_model
 
