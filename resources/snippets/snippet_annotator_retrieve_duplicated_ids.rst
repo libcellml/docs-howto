@@ -15,8 +15,8 @@
       // Create an Annotator instance.
       auto annotator = libcellml::Annotator::create();
 
-      // Pass the model to the annotator and build the index.
-      annotator->buildModelIndex(model);
+      // Pass the model to the annotator and it will build its index.
+      annotator->setModel(model);
 
       auto duplicatedIdItems = annotator->items("duplicatedId");
       // The duplicateIdItems is a vector of AnyItem items; pairs whose first
@@ -28,8 +28,8 @@
       # Create an Annotator instance.
       annotator = Annotator()
 
-      # Pass the model to the annotator and build the index.
-      annotator.buildModelIndex(model)
+      # Pass the model to the annotator and it will build its index.
+      annotator.setModel(model)
 
       duplicatedIdItems = annotator.items("duplicatedId")
       # The duplicateIdItems is a vector of items with "duplicatedId" 

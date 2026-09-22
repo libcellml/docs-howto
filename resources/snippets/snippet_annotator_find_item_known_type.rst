@@ -17,8 +17,8 @@
       // Create an Annotator.
       auto annotator = libcellml::Annotator::create();
 
-      // Build the annotator to work with the model.
-      annotator->buildModelIndex(model);
+      // Set the model for the annotator to work with.
+      annotator->setModel(model);
 
       // Retrieve entity items of known type using their id attribute.
       auto myComponent = annotator->component("myComponentId");
@@ -80,8 +80,8 @@
       # Create an Annotator.
       annotator = Annotator()
 
-      # Build the annotator to work with the model.
-      annotator.buildModelIndex(model)
+      # Set the model for the annotator to work with.
+      annotator.setModel(model)
 
       # Retrieve entity items of known type using their id attribute.
       my_component = annotator.component("myComponentId")

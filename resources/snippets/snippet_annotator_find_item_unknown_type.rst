@@ -19,8 +19,8 @@
       // Create an Annotator.
       auto annotator = libcellml::Annotator::create();
 
-      // Build the annotator to work with the model.
-      annotator->buildModelIndex(model);
+      // Set the model for the annotator to work with.
+      annotator->setModel(model);
 
       // Retrieve an item of unknown type from the annotator.
       auto anyItem = annotator->item("findThisId");

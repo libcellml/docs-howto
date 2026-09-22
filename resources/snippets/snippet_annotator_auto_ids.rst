@@ -30,8 +30,8 @@
 
       // ---------- OPTION 2: Automatic ids by type -----------------------
       //
-      // First submit the model to the Annotator and build its index.
-      annotator->buildModelIndex(model);
+      // First submit the model to the Annotator and it will build its index.
+      annotator->setModel(model);
 
       // Next, specify the type of item to assign automatic ids to using the 
       // Type enumeration options.  This will assign every Variable in the model
@@ -73,8 +73,8 @@
 
       # ---------- OPTION 2: Automatic ids by type -----------------------
       #
-      # First submit the model to the Annotator and build its index.
-      annotator.buildModelIndex(model)
+      # First submit the model to the Annotator and it will build its index.
+      annotator.setModel(model)
 
       # Next, specify the type of item to assign automatic ids to using the 
       # Type enumeration options.  This will assign every Variable in the model

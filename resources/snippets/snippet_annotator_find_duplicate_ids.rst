@@ -33,8 +33,8 @@
       units->setId("anotherDuplicateId");
       model->setEncapsulationId("anotherDuplicateId");
 
-      // Pass the model to the annotator and build the index.
-      annotator->buildModelIndex(model);
+      // Pass the model to the annotator and it will build its index.
+      annotator->setModel(model);
 
       // Retrieve a list of duplicated ids from the annotator.
       auto duplicateIdList = annotator->duplicateIds();
@@ -65,8 +65,8 @@
       units.setId("anotherDuplicateId")
       model.setEncapsulationId("anotherDuplicateId")
 
-      # Pass the model to the annotator and build the index.
-      annotator.buildModelIndex(model)
+      # Pass the model to the annotator and it willbuild its index.
+      annotator.setModel(model)
 
       # Retrieve a list of duplicated ids from the annotator.
       duplicateIdList = annotator.duplicateIds()

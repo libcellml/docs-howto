@@ -30,7 +30,7 @@
       // stored as the current model within the annotator.
 
       // OR: Clear all ids in a model which is was previously associated with the annotator.
-      annotator->buildModelIndex(model2);
+      annotator->setModel(model2);
       annotator->clearAllIds();  // This will clear ids in model2, the model stored in the annotator.
 
     .. code-tab:: py
@@ -49,5 +49,5 @@
       # stored as the current model within the annotator.
 
       # OR: Clear all ids in a model which is was previously associated with the annotator.
-      annotator.buildModelIndex(model2)
+      annotator.setModel(model2)
       annotator.clearAllIds()  # This will clear ids in model2, the model stored in the annotator.
